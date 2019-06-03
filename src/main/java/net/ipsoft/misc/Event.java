@@ -42,6 +42,13 @@ public class Event {
     }
 
     @Override
+    public String toString() {
+        return "Server=" + getServer() + "|" +
+                "Service=" + getService() + "|" +
+                "UnixTime=" + getUnixTime();
+    }
+
+    @Override
     public boolean equals(Object event) {
         return this.server.equals(event)
                 && this.service.equals(event)

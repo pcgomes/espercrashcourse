@@ -27,8 +27,12 @@ public class EsperCrashCourse {
         createDaemon(9000);
     }
 
+    /**
+     * Initialize Esper engine with constrained threadpool
+     */
     protected static void initEsperEngine() {
         Configuration config = new Configuration();
+
         // Enable discard of events from streams with @drop
         //config.getEngineDefaults().getExecution().setPrioritized(true);
         //config.getEngineDefaults().getLogging().setAuditPattern("!!%u!!%s!!%m!!");
@@ -43,16 +47,19 @@ public class EsperCrashCourse {
         esperEngine = EPServiceProviderManager.getDefaultProvider(config);
         esperEngine.initialize();
 
+        // Create a single default Subscriber to collect dropped events
+        //createEventSubscriber("DroppedEvents", "select * from DroppedEvents");
+
     }
 
     /**
-     * Creates a subscriber object to a
+     * Creates a subscriber object to an EPLStatement
      * @param logger name to logger object
      * @param eplStatement statement that object subscribes to
      * @return
      */
-    protected static EventDeadEnd createEventSubscriber(String logger, String eplStatement) {
-        EventDeadEnd subscriber = new EventDeadEnd(logger);
+    protected static EventSubscriber createEventSubscriber(String logger, String eplStatement) {
+        EventSubscriber subscriber = new EventSubscriber(logger);
         esperEngine.getEPAdministrator()
                 .createEPL(eplStatement)
                 .setSubscriber(subscriber);
